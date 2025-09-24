@@ -1,0 +1,250 @@
+/* ---------- Theme tokens (Dark default) ---------- */
+:root {                                 /* Gốc biến CSS (mặc định dark mode) */
+  color-scheme: dark;                   /* Gợi ý cho browser, form/control theo dark */
+  --bg: #0b0c10;                        /* Màu nền tổng thể */
+  --bg-grad: radial-gradient(1200px 800px at 80% -10%, #1a2030 0%, transparent 40%); /* Vầng sáng nền */
+  --panel: #12141a;                     /* Nền khối (card/sidebar) */
+  --panel-2: #171a21;                   /* Nền khối phụ / nút phụ */
+  --text: #e6e8eb;                      /* Màu chữ mặc định */
+  --muted: #a7b0be;                     /* Màu chữ phụ / mô tả */
+
+  --primary: #4f8cff;                   /* Màu chính (nút, badge) */
+  --primary-2: #3a6fe0;                 /* Màu chính đậm hơn (gradient) */
+  --danger: #ef4444;                    /* Màu cảnh báo (xóa, lỗi) */
+  --success: #22c55e;                   /* Màu thành công */
+
+  --ring: 0 0 0 3px rgba(79,140,255,.25); /* Viền focus (a11y) */
+  --radius: 14px;                       /* Bo góc mặc định */
+  --shadow: 0 6px 24px rgba(0,0,0,.25); /* Đổ bóng mặc định */
+  --border: 1px solid rgba(255,255,255,.08); /* Viền tinh tế */
+  --gap: 20px;                          /* Khoảng cách grid/gap mặc định */
+}
+
+/* ---------- Light mode ---------- */
+:root[data-theme="light"] {             /* Khi ép theme sáng bằng data-theme="light" */
+  color-scheme: light;                  /* Gợi ý cho browser dùng light */
+  --bg: #f7f7fb;                        /* Nền sáng */
+  --bg-grad: radial-gradient(1200px 800px at 80% -10%, #e9eefc 0%, transparent 40%); /* Vầng sáng nhẹ */
+  --panel: #ffffff;                     /* Panel sáng */
+  --panel-2: #f4f6fb;                   /* Panel phụ sáng */
+  --text: #0b0c10;                      /* Chữ tối */
+  --muted: #5b6575;                     /* Chữ phụ tối hơn */
+
+  --primary: #3b82f6;                   /* Màu chính kiểu light */
+  --primary-2: #2563eb;                 /* Đậm hơn */
+
+  --shadow: 0 6px 24px rgba(0,0,0,.08); /* Bóng nhẹ cho nền sáng */
+  --border: 1px solid rgba(0,0,0,.08);  /* Viền nhẹ */
+}
+
+/* ---------- Auto match OS theme ---------- */
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme]) {             /* Nếu KHÔNG đặt data-theme -> theo OS */
+    color-scheme: light;
+    --bg: #f7f7fb;
+    --bg-grad: radial-gradient(1200px 800px at 80% -10%, #e9eefc 0%, transparent 40%);
+    --panel: #ffffff;
+    --panel-2: #f4f6fb;
+    --text: #0b0c10;
+    --muted: #5b6575;
+
+    --primary: #3b82f6;
+    --primary-2: #2563eb;
+
+    --shadow: 0 6px 24px rgba(0,0,0,.08);
+    --border: 1px solid rgba(0,0,0,.08);
+  }
+}
+
+/* ---------- Reduced motion ---------- */
+@media (prefers-reduced-motion: reduce){
+  * { animation: none !important; transition: none !important; }  /* Tắt chuyển động vì a11y */
+}
+
+/* ---------- Base ---------- */
+* { box-sizing: border-box; }           /* Tính width/height gồm padding/border */
+html, body, #root { height: 100%; }     /* Container gốc full chiều cao */
+body {
+  margin: 0;                            /* Xóa margin mặc định */
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji"; /* Font stack hệ thống */
+  color: var(--text);                   /* Màu chữ mặc định */
+  background: var(--bg-grad), var(--bg);/* Nền = gradient + màu nền */
+}
+
+/* ---------- Scrollbar (WebKit) ---------- */
+*::-webkit-scrollbar { height:10px; width:10px; }                /* Kích thước scrollbar */
+*::-webkit-scrollbar-thumb { background: rgba(255,255,255,.12); border-radius: 999px; } /* Tay cầm cuộn */
+*::-webkit-scrollbar-track { background: transparent; }          /* Rãnh cuộn */
+
+/* ---------- Layout ---------- */
+.container {                           /* Khối bọc nội dung chính */
+  max-width: 1100px;                   /* Giới hạn chiều rộng */
+  margin-inline: auto;                 /* Canh giữa theo chiều ngang */
+  padding: 20px;                       /* Khoảng đệm */
+}
+.grid {                                /* Layout 2 cột: danh sách & giỏ hàng */
+  display: grid;
+  grid-template-columns: 2fr 1fr;      /* Cột trái rộng gấp đôi cột phải */
+  gap: var(--gap);                     /* Khoảng cách 2 cột */
+}
+@media (max-width: 900px){
+  .grid { grid-template-columns: 1fr; }/* Mobile: chuyển về 1 cột */
+}
+
+/* ---------- Navbar ---------- */
+.nav {                                 /* Thanh điều hướng trên cùng */
+  position: sticky; top: 0; z-index: 10; /* Dính trên cùng khi cuộn */
+  display: flex; align-items: center; justify-content: space-between; /* Căn giữa & tách 2 đầu */
+  padding: 14px 20px;                  /* Khoảng đệm */
+  background: color-mix(in hsl, var(--panel) 70%, transparent); /* Panel mờ */
+  backdrop-filter: blur(10px);         /* Làm mờ nền phía sau (glass) */
+  border-bottom: var(--border);        /* Viền dưới */
+}
+.brand { font-weight: 800; letter-spacing: .5px; } /* Logo chữ đậm & tracking */
+.cart-pill {                           /* Viên đếm giỏ */
+  display: inline-flex; align-items: center; gap: 8px; /* Nằm ngang, khoảng cách icon/số */
+  background: var(--panel-2); border: var(--border);   /* Nền & viền */
+  padding: 8px 12px; border-radius: 999px; box-shadow: var(--shadow); /* Tròn & đổ bóng */
+}
+.badge {                               /* Bóng đếm */
+  min-width: 24px; height: 24px; padding: 0 6px; /* Kích thước tối thiểu */
+  display: grid; place-content: center; /* Căn giữa số */
+  border-radius: 999px; background: var(--primary); color: #fff; font-weight: 700; /* Nền xanh, chữ trắng */
+}
+
+/* ---------- Sections & Cards ---------- */
+.section-title { margin: 6px 0 14px; font-size: 20px; font-weight: 700; } /* Tiêu đề “Sản phẩm” */
+
+/* Danh sách sản phẩm hiển thị ngang có kéo (giống carousel nhẹ) */
+.products{
+  display: flex;                       /* Xếp thẻ theo hàng ngang */
+  gap: var(--gap);                     /* Khoảng cách giữa các card */
+  overflow-x: auto;                    /* Kéo ngang khi tràn */
+  padding-bottom: 8px;                 /* Tạo khoảng cho scrollbar */
+  scroll-snap-type: x mandatory;       /* Kéo sẽ “dính” vào từng card */
+}
+.products::-webkit-scrollbar{ height: 10px; } /* Thanh cuộn ngang mảnh */
+
+.card{                                  /* Thẻ sản phẩm */
+  background: var(--panel); border: var(--border); /* Nền & viền */
+  border-radius: var(--radius); box-shadow: var(--shadow); /* Bo góc & bóng */
+  padding: 12px; display: flex; flex-direction: column; gap: 10px; /* Layout dọc */
+  transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease; /* Hover mượt */
+  flex: 0 0 220px;                      /* Rộng cố định để xếp ngang đẹp */
+  scroll-snap-align: start;             /* Mốc bám khi kéo */
+}
+.card:hover { transform: translateY(-2px); border-color: rgba(255,255,255,.18); } /* Nổi nhẹ khi hover */
+.card img { width: 100%; aspect-ratio: 1/1; object-fit: cover; border-radius: 10px; background: #0f1220; } /* Ảnh vuông */
+.card .title { font-weight: 700; margin: 2px 0 0; } /* Tên sản phẩm */
+.muted { color: var(--muted); font-size: 14px; }     /* Chữ mô tả nhạt */
+.price { font-weight: 800; }                          /* Giá đậm */
+
+/* ---------- Buttons & Inputs ---------- */
+.btn {                                   /* Nút chung */
+  appearance: none; border: none; outline: none;     /* Gỡ style mặc định */
+  padding: 10px 12px; border-radius: 12px; font-weight: 600; cursor: pointer; /* Hình dáng & cảm giác */
+  background: var(--panel-2); color: var(--text); border: var(--border);      /* Nền & viền */
+  transition: transform .08s ease, background .16s ease, border-color .16s ease, box-shadow .16s ease; /* Hiệu ứng */
+}
+.btn:hover { background: #1c2331; border-color: rgba(255,255,255,.2); } /* Hover trong dark */
+:root[data-theme="light"] .btn:hover { background: #eef1f7; }           /* Hover trong light */
+.btn:active { transform: translateY(1px); }                              /* Nhấn xuống */
+.btn:focus-visible { box-shadow: var(--ring); border-color: transparent; } /* Vòng sáng focus a11y */
+
+.btn-primary {                            /* Nút chính (thêm vào giỏ / thanh toán) */
+  background: linear-gradient(180deg, var(--primary), var(--primary-2)); color: #fff; border: none;
+}
+.btn-primary:hover { filter: brightness(1.05); box-shadow: 0 8px 28px rgba(79,140,255,.25); } /* Sáng hơn khi hover */
+
+.btn-ghost { background: transparent; border: var(--border); } /* Nút viền mảnh */
+.btn-danger {                              /* Nút màu đỏ (xóa giỏ) */
+  background: linear-gradient(180deg, #ef5350, #e53935);
+  color: #fff; border: none;
+}
+
+/* ---------- Qty group ---------- */
+.qty { display: flex; align-items: center; gap: 8px; } /* Nhóm số lượng (wrap input) */
+.qty input {                             /* Ô nhập số lượng */
+  width: 58px; height: 36px; border-radius: 10px; border: var(--border);
+  background: var(--panel-2); color: var(--text);
+  text-align: center; font-weight: 700; outline: none;
+}
+.qty input:focus { box-shadow: var(--ring); border-color: transparent; } /* Focus đẹp */
+
+/* ---------- Cart (sidebar) ---------- */
+.sidebar {                               /* Khối giỏ hàng bên phải */
+  position: sticky; top: 18px;          /* Dính khi cuộn */
+  background: var(--panel); border: var(--border);
+  border-radius: var(--radius); box-shadow: var(--shadow);
+  padding: 16px; height: fit-content;   /* Bọc gọn nội dung */
+}
+.cart-line {                             /* Một dòng sản phẩm trong giỏ */
+  display: grid;
+  grid-template-columns: 64px 1fr auto; /* Ảnh | thông tin | tổng tiền */
+  gap: 12px; align-items: center;
+  padding: 10px 0; border-bottom: var(--border);
+}
+.cart-line:last-child { border-bottom: none; } /* Dòng cuối không kẻ */
+.cart-thumb { width: 64px; height: 64px; object-fit: cover; border-radius: 8px; background: #0f1220; } /* Ảnh nhỏ */
+
+/* Giá ở mỗi dòng giỏ hàng (bên phải) */
+.line-right {
+  font-weight: 800;                      /* In đậm */
+  display: inline-flex; align-items: center; /* Dính “đ” cùng dòng số */
+  gap: 4px; white-space: nowrap;         /* Không xuống dòng */
+  text-align: right;                     /* Canh phải cột tổng tiền */
+}
+.line-right .currency {                  /* Ký hiệu “đ” */
+  font-size: 0.95em; font-weight: 700; line-height: 1;
+}
+
+/* Cụm nút: − [input] +  [Xóa] (trong phần info) */
+.cart-actions {
+  margin-top: 6px;
+  display: flex; gap: 8px; align-items: center; flex-wrap: nowrap; /* Luôn nằm cùng hàng */
+}
+.cart-actions .btn:not(.btn-ghost) {     /* Nút − và + (không ảnh hưởng nút Xóa kiểu ghost) */
+  min-width: 36px; height: 36px;
+  padding: 0; display: grid; place-items: center; /* Vuông & icon giữa */
+}
+@media (max-width: 480px){
+  .cart-actions { flex-wrap: wrap; }     /* Màn nhỏ: cho phép xuống dòng để không vỡ layout */
+}
+
+/* Tổng tiền (footer của giỏ hàng) */
+.totals {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-top: 12px; font-weight: 700;
+}
+.totals > :last-child {                  /* Cột số tiền tổng */
+  display: inline-flex; align-items: center;
+  gap: 4px; white-space: nowrap;         /* Dính “đ” cùng dòng */
+}
+.totals > :last-child .currency {
+  font-size: 0.95em; font-weight: 700; line-height: 1;
+}
+
+.stack { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; } /* Cột dọc giữa các nút trong giỏ */
+
+.hr { height: 1px; background: rgba(255,255,255,.08); margin: 8px 0; border: 0; } /* Đường kẻ nhạt */
+:root[data-theme="light"] .hr { background: rgba(0,0,0,.08); }                     /* Bản sáng */
+
+/* ---------- Utils ---------- */
+.sr-only {                                /* Ẩn label nhưng vẫn dành cho screen-reader (a11y) */
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+}
+
+/* ---------- Add-to-cart animation ---------- */
+.flying-img {                             /* Ảnh bay vào giỏ (nếu bạn có script) */
+  position: fixed; width: 64px; height: 64px; object-fit: cover;
+  border-radius: 10px; pointer-events: none; z-index: 9999;
+  transition: transform .6s cubic-bezier(.22,1,.36,1), opacity .6s ease;
+  box-shadow: 0 10px 25px rgba(0,0,0,.35);
+}
+.badge-pulse { animation: badge-pulse .5s ease; } /* Nhịp “phập phồng” cho badge giỏ */
+@keyframes badge-pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.18); }
+  100% { transform: scale(1); }
+}
